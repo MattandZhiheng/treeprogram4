@@ -68,11 +68,19 @@ public class Interval<T extends Comparable<T>> implements IntervalADT<T> {
      * @param   other other interval to compare
      * @return  true if it overlaps, false if no overlap 
      */
-    public boolean overlaps(IntervalADT<T> other) {
-        if (start.compareTo(other.getEnd()) > 0 || 
-        		end.compareTo(other.getStart()) < 0)
-        	return false;
-        return true; 
+    public boolean overlaps(IntervalADT<T> other) throws IllegalArgumentException{
+        if(other == null){
+        	throw new IllegalArgumentException();
+        }
+    	
+    	if (start.compareTo(other.getEnd()) > 0 || 
+        		end.compareTo(other.getStart()) < 0){
+    		return false;
+    	}
+        	
+    	else{
+    		return true; 
+    	}
     }
 
     @Override
@@ -83,8 +91,13 @@ public class Interval<T extends Comparable<T>> implements IntervalADT<T> {
      * @return true  if point falls in interval
      */
     public boolean contains(T point) {
-        return (point.compareTo(start) >= 0 ) && 
-        		(point.compareTo(end) <= 0);
+        if(point.compareTo(start) >= 0  && 
+        		point.compareTo(end) <= 0){
+        	return true;
+        }
+        else{
+        	return false;
+        }
     }
 
     @Override
