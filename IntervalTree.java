@@ -12,8 +12,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Node;
-
 public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T> {
 	
 	private IntervalNode<T> root;
@@ -26,7 +24,8 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 	public IntervalTree(IntervalNode<T> root){
 		this.root = root;
 	}
-	
+	public IntervalTree(){
+	}
 	
 	@Override
 	/**
@@ -140,12 +139,56 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		}
 	}
 
+	/**
+	 * Find and return a list of all intervals that overlap with the given interval. 
+	 * 
+	 * <p>Tip: Define a helper method for the recursive call and call it with root, 
+	 * the interval, and an empty list.  Then, return the list that has been built.</p>
+	 * 
+	 * <pre>   private void findOverlappingHelper(IntervalNode node, IntervalADT interval, List<IntervalADT<T>> result)</pre>
+	 * 
+	 * <p>Pseudo-code for such a recursive findingOverlappingHelper method.</p>
+	 * 
+	 * <ol>
+	 * <li>if node is null, return</li>
+	 * <li>if node interval overlaps with the given input interval, add it to the result.</li>
+	 * <li>if left subtree's max is greater than or equal to the interval's start, call findOverlappingHelper in the left subtree.</li>
+	 * <li>if right subtree's max is greater than or equal to the interval's start, call call findOverlappingHelper in the rightSubtree.</li>
+	 * </ol>
+	 *  
+	 * @param interval the interval to search for overlapping
+	 * 
+	 * @return list of intervals that overlap with the input interval.
+	 */
 	@Override
-	public List<IntervalADT<T>> findOverlapping(
-					IntervalADT<T> interval) {
-		// TODO Auto-generated method stub
+	public List<IntervalADT<T>> findOverlapping(IntervalADT<T> interval) {
+		ArrayList<IntervalADT<T>> list = new ArrayList<IntervalADT<T>>();
+		findOverlappingHelper(root,interval,list);
+		return list;
+		
 	}
 
+	private void findOverlappingHelper(IntervalNode node, IntervalADT interval, List<IntervalADT<T>> result){
+		if (node == null){
+			return;
+		}
+		
+		if (interval.overlaps(interval)){
+			result.add(interval);
+		}
+		
+		if (node.getLeftNode() != null && 
+				node.getLeftNode().getMaxEnd().compareTo(interval.getStart()) >= 0 ){
+			findOverlappingHelper(node.getLeftNode(), interval, result);
+		}
+		
+		if (node.getRightNode() != null &&
+				node.getRightNode().getMaxEnd().compareTo(interval.getStart()) >= 0 ){
+			findOverlappingHelper(node.getRightNode(), interval, result);
+		}
+	}
+	
+	
 	@Override
 	public List<IntervalADT<T>> searchPoint(T point) {
 		ArrayList<IntervalADT<T>> list = new ArrayList<IntervalADT<T>>();
