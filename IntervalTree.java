@@ -143,15 +143,24 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		return lookup(node, point);
 	}
 	
-	private boolean lookup(IntervalNode<T> node, T point){
-		
-	}
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
+		return getSizeHelper(root);
 	}
 
+	private int getSizeHelper(IntervalNode<T> node){
+		if (node == null){
+			return 0;
+		}
+		
+		//Add one for root
+		//Goes down right and left tress and counts number of nodes 
+		return 1 + getSizeHelper(node.getLeftNode())
+		+ getSizeHelper(node.getRightNode());
+	}
+	
+	
 	@Override
 	public int getHeight(){
 	    return getHeight(root);
@@ -159,9 +168,12 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 	
 	private int getHeight(IntervalNode<T> node) {
 	    if (node == null) {
-	        return -1;
+	        return 0;
 	    }
-
+	    if (node.getLeftNode() == null && node.getRightNode() == null){
+	    	return 1;
+	    }
+	    
 	    int lefth = getHeight(node.getLeftNode());
 	    int righth = getHeight(node.getRightNode());
 
@@ -174,7 +186,23 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 
 	@Override
 	public boolean contains(IntervalADT<T> interval) {
-		// TODO
+		return contains(interval, root);	
+		}
+	
+	private boolean contains(IntervalADT<T> interval, IntervalNode<T> root) {
+		//if the node's interval is equal to the interval
+		if (root.getInterval().compareTo(interval) == 0 ){
+			return true;
+		}
+		
+		boolean contain = false; 
+		if (root.getLeftNode() != null){
+			contain = contains(interval, root.getLeftNode());
+		}
+		if (!contain && root.getRightNode() != null){
+			contain = contains(interval, root.getRightNode());
+		}
+		return contain;
 	}
 	
 
