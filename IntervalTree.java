@@ -45,7 +45,8 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 
 	}
 	
-	private IntervalNode<T> insertHelper(IntervalNode<T> node, IntervalADT<T> interval) 
+	private IntervalNode<T> insertHelper(IntervalNode<T> node, 
+			IntervalADT<T> interval) 
 			throws IllegalArgumentException {
 		
 		//if interval null
@@ -98,8 +99,13 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 					throws IntervalNotFoundException, IllegalArgumentException {
 		
 		if (node == null){
-			return null;
+			throw new IllegalArgumentException();
 		}
+		
+		if (!contains(interval)){
+			throw new IntervalNotFoundException("IntervalNotFound");
+		}
+		
 		
 		if (interval.compareTo(node.getInterval()) == 0){
 			if (node.getLeftNode() == null && node.getRightNode() == null){
@@ -115,6 +121,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 			//n with two children
 			IntervalADT<T> smallVal = root.getSuccessor().getInterval();
 			node.setInterval(smallVal);
+			node.setMaxEnd(smallVal.getEnd());
 			node.setRightNode(deleteHelper(node.getRightNode(), smallVal));
 			return node;
 		}
@@ -142,7 +149,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 	public List<IntervalADT<T>> searchPoint(T point) {
 		return lookup(node, point);
 	}
-	
+
 
 	@Override
 	public int getSize() {
