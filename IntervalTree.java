@@ -9,6 +9,7 @@
 // Author2: Zhiheng Wang, zwang759@wisc.edu, 9074796922 ,003
 // 
 //////////////////////////// 80 columns wide //////////////////////////////////
+import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Node;
@@ -147,8 +148,32 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 
 	@Override
 	public List<IntervalADT<T>> searchPoint(T point) {
-		return lookup(node, point);
+		ArrayList<IntervalADT<T>> list = new ArrayList<IntervalADT<T>>();
+		return searchPoint(point, root, list);
 	}
+	
+	private List<IntervalADT<T>> searchPoint(T point, IntervalNode<T> node,
+			ArrayList<IntervalADT<T>> list){
+		if (node.equals(null)){
+			return list;
+		}
+		
+		if (point.compareTo(node.getInterval().getStart()) >= 0 &&
+				point.compareTo(node.getInterval().getEnd()) <= 0){
+			list.add(node.getInterval());
+		}
+		
+		if(!(node.getLeftNode() == null)){
+			searchPoint(point, node.getLeftNode(), list);
+		}
+		
+		if(!(node.getRightNode() == null)){
+			searchPoint(point, node.getRightNode(), list);
+		}
+		
+		return list;
+	}
+	
 
 
 	@Override
