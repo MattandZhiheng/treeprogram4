@@ -110,7 +110,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		
 		
 		if (interval.compareTo(node.getInterval()) == 0){
-			// if both subtree null then return null 
+			// if both subtree null then return null 			
 			if (node.getLeftNode() == null && node.getRightNode() == null){
 				return null;
 			}
@@ -134,15 +134,19 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		
 		//if interval is less than node, go to left tree 
 		else if (interval.compareTo(node.getInterval()) < 0){
-			node.setLeftNode(deleteHelper(node.getLeftNode(), interval));
-			node.setMaxEnd(recalculateMaxEnd(node));
+			if(node.getLeftNode() != null){
+				node.setLeftNode(deleteHelper(node.getLeftNode(), interval));
+				node.setMaxEnd(recalculateMaxEnd(node));
+			}
 			return node;
 		}
 		
 		//if interval is greater than node, go to right tree 
 		else{
-			node.setRightNode(deleteHelper(node.getRightNode(), interval));
-			node.setMaxEnd(recalculateMaxEnd(node));
+			if(node.getRightNode() != null){
+				node.setRightNode(deleteHelper(node.getRightNode(), interval));
+				node.setMaxEnd(recalculateMaxEnd(node));
+			}
 			return node;
 		}
 	}
