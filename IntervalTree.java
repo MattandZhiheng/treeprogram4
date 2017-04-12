@@ -214,7 +214,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		
 		// if point null, throw exception 
 		if (point == null){
-			throw new IllegalArgumentException():
+			throw new IllegalArgumentException();
 		}
 		
 		// point is greater than the start or less than the end 
