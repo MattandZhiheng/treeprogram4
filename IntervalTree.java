@@ -98,7 +98,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 					IntervalADT<T> interval)
 					throws IntervalNotFoundException, IllegalArgumentException {
 		
-		if (node == null){
+		if (interval == null){
 			throw new IllegalArgumentException();
 		}
 		
@@ -112,9 +112,11 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 				return null;
 			}
 			if (node.getLeftNode() == null){
+				node.setMaxEnd(recalculateMaxEnd(node));
 				return node.getRightNode();
 			}
 			if (node.getRightNode() == null){
+				node.setMaxEnd(recalculateMaxEnd(node));
 				return node.getLeftNode();
 			}
 			
@@ -123,43 +125,38 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 			node.setInterval(smallVal);
 			node.setMaxEnd(smallVal.getEnd());
 			node.setRightNode(deleteHelper(node.getRightNode(), smallVal));
+			node.setMaxEnd(recalculateMaxEnd(node));
 			return node;
 		}
 		
 		//if interval is less than node, go to left tree 
 		else if (interval.compareTo(node.getInterval()) < 0){
 			node.setLeftNode(deleteHelper(node.getLeftNode(), interval));
+			node.setMaxEnd(recalculateMaxEnd(node));
 			return node;
 		}
 		
 		//if interval is greater than node, go to right tree 
 		else{
 			node.setRightNode(deleteHelper(node.getRightNode(), interval));
+			node.setMaxEnd(recalculateMaxEnd(node));
 			return node;
 		}
 	}
+	
+	private T recalculateMaxEnd(IntervalNode<T> nodeToRecalculate){
+		if (nodeToRecalculate.getLeftNode() != null && 
+				nodeToRecalculate.getMaxEnd().compareTo( nodeToRecalculate.getLeftNode().getMaxEnd()) < 0) {
+			return nodeToRecalculate.getLeftNode().getMaxEnd();
+		}
+		if (nodeToRecalculate.getRightNode() != null && 
+				nodeToRecalculate.getMaxEnd().compareTo((T) nodeToRecalculate.getRightNode().getMaxEnd()) < 0) {
+			return nodeToRecalculate.getRightNode().getMaxEnd();
+		}
+		return nodeToRecalculate.getMaxEnd();
+	}
 
-	/**
-	 * Find and return a list of all intervals that overlap with the given interval. 
-	 * 
-	 * <p>Tip: Define a helper method for the recursive call and call it with root, 
-	 * the interval, and an empty list.  Then, return the list that has been built.</p>
-	 * 
-	 * <pre>   private void findOverlappingHelper(IntervalNode node, IntervalADT interval, List<IntervalADT<T>> result)</pre>
-	 * 
-	 * <p>Pseudo-code for such a recursive findingOverlappingHelper method.</p>
-	 * 
-	 * <ol>
-	 * <li>if node is null, return</li>
-	 * <li>if node interval overlaps with the given input interval, add it to the result.</li>
-	 * <li>if left subtree's max is greater than or equal to the interval's start, call findOverlappingHelper in the left subtree.</li>
-	 * <li>if right subtree's max is greater than or equal to the interval's start, call call findOverlappingHelper in the rightSubtree.</li>
-	 * </ol>
-	 *  
-	 * @param interval the interval to search for overlapping
-	 * 
-	 * @return list of intervals that overlap with the input interval.
-	 */
+
 	@Override
 	public List<IntervalADT<T>> findOverlapping(IntervalADT<T> interval) {
 		ArrayList<IntervalADT<T>> list = new ArrayList<IntervalADT<T>>();

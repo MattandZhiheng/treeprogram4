@@ -118,7 +118,7 @@ public class IntervalNode<T extends Comparable<T>> {
 	 */
 	public void setLeftNode(IntervalNode<T> leftNode) {
 		this.leftNode = leftNode;
-	}
+	} 
 
 	/**
 	 * Getter for the rightNode of this node.
