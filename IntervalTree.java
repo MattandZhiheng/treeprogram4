@@ -98,16 +98,19 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 					IntervalADT<T> interval)
 					throws IntervalNotFoundException, IllegalArgumentException {
 		
+		// if interval is null 
 		if (interval == null){
 			throw new IllegalArgumentException();
 		}
 		
+		// if interval does not exist 
 		if (!contains(interval)){
 			throw new IntervalNotFoundException(interval.toString() + " not found in tree");
 		}
 		
 		
 		if (interval.compareTo(node.getInterval()) == 0){
+			// if both subtree null then return null 
 			if (node.getLeftNode() == null && node.getRightNode() == null){
 				return null;
 			}
