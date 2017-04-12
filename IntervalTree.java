@@ -103,7 +103,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		}
 		
 		if (!contains(interval)){
-			throw new IntervalNotFoundException(interval.toString() + "not found in tree");
+			throw new IntervalNotFoundException(interval.toString() + " not found in tree");
 		}
 		
 		
