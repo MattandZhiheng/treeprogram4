@@ -91,6 +91,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 	public void delete(IntervalADT<T> interval)
 					throws IntervalNotFoundException, IllegalArgumentException {
 		root = deleteHelper(root, interval);
+		recalculateMaxEnd(root);
 	}
 
 	@Override
@@ -100,12 +101,12 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		
 		// if interval is null 
 		if (interval == null){
-			throw new IllegalArgumentException();
+ 			throw new IllegalArgumentException();
 		}
 		
 		// if interval does not exist 
 		if (!contains(interval)){
-			throw new IntervalNotFoundException(interval.toString() + " not found in tree");
+			throw new IntervalNotFoundException(interval.toString());
 		}
 		
 		
@@ -115,11 +116,11 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 				return null;
 			}
 			if (node.getLeftNode() == null){
-				node.setMaxEnd(recalculateMaxEnd(node));
+				recalculateMaxEnd(node);
 				return node.getRightNode();
 			}
 			if (node.getRightNode() == null){
-				node.setMaxEnd(recalculateMaxEnd(node));
+				recalculateMaxEnd(node);
 				return node.getLeftNode();
 			}
 			
@@ -128,7 +129,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 			node.setInterval(smallVal);
 			node.setMaxEnd(smallVal.getEnd());
 			node.setRightNode(deleteHelper(node.getRightNode(), smallVal));
-			node.setMaxEnd(recalculateMaxEnd(node));
+			recalculateMaxEnd(node);
 			return node;
 		}
 		
@@ -136,7 +137,6 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		else if (interval.compareTo(node.getInterval()) < 0){
 			if(node.getLeftNode() != null){
 				node.setLeftNode(deleteHelper(node.getLeftNode(), interval));
-				node.setMaxEnd(recalculateMaxEnd(node));
 			}
 			return node;
 		}
@@ -145,27 +145,23 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		else{
 			if(node.getRightNode() != null){
 				node.setRightNode(deleteHelper(node.getRightNode(), interval));
-				node.setMaxEnd(recalculateMaxEnd(node));
 			}
 			return node;
 		}
 	}
 	
-	private T recalculateMaxEnd(IntervalNode<T> nodeToRecalculate){
-		// if left nodeToRecalculate not null and less than left node, 
-		// set the greater maxEnd to maxEnd
-		if (nodeToRecalculate.getLeftNode() != null && 
-				nodeToRecalculate.getMaxEnd().compareTo( nodeToRecalculate.getLeftNode().getMaxEnd()) < 0) {
-			return nodeToRecalculate.getLeftNode().getMaxEnd();
+	private void recalculateMaxEnd(IntervalNode<T> nodeToRecalculate){
+		//if right child is not null, set the maxEnd to the right child's 
+		if( nodeToRecalculate.getRightNode() !=null){
+
+				nodeToRecalculate.setMaxEnd(nodeToRecalculate.getRightNode().getMaxEnd());
+			}
+		//else reset the maxEnd to the node'
+		else{
+			nodeToRecalculate.setMaxEnd(nodeToRecalculate.getInterval().getEnd());
 		}
-		// if right nodeToRecalculate not null and less than right node, 
-		// set the greater maxEnd to maxEnd
-		if (nodeToRecalculate.getRightNode() != null && 
-				nodeToRecalculate.getMaxEnd().compareTo((T) nodeToRecalculate.getRightNode().getMaxEnd()) < 0) {
-			return nodeToRecalculate.getRightNode().getMaxEnd();
-		}
-		return nodeToRecalculate.getMaxEnd();
 	}
+	
 
 
 	@Override
