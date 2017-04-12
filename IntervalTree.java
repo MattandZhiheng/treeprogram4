@@ -103,7 +103,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		}
 		
 		if (!contains(interval)){
-			throw new IntervalNotFoundException("IntervalNotFound");
+			throw new IntervalNotFoundException(interval.toString() + "not found in tree");
 		}
 		
 		
@@ -134,7 +134,7 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 		
 		//if interval is greater than node, go to right tree 
 		else{
-			node.setLeftNode(deleteHelper(node.getRightNode(), interval));
+			node.setRightNode(deleteHelper(node.getRightNode(), interval));
 			return node;
 		}
 	}
@@ -173,8 +173,8 @@ public class IntervalTree<T extends Comparable<T>> implements IntervalTreeADT<T>
 			return;
 		}
 		
-		if (interval.overlaps(interval)){
-			result.add(interval);
+		if (interval.overlaps(node.getInterval())){
+			result.add(node.getInterval());
 		}
 		
 		if (node.getLeftNode() != null && 

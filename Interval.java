@@ -121,4 +121,9 @@ public class Interval<T extends Comparable<T>> implements IntervalADT<T> {
 		return start.compareTo(other.getStart());
     }
 
+    
+    public String toString(){
+    	String str = label + " " + "[" + start + ", " + end + "]";
+    	return str;
+    }
 }
